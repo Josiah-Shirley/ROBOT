@@ -164,16 +164,32 @@ def receive_data():
 
 
                 if y > 0:
-                    forwardSpeeds = [5400,4900,4400,3900,3400]
-                    forward = forwardSpeeds[x-1]
+                    forwardSpeeds = [5400,5300,5200,5100,5000]
+                    forward = forwardSpeeds[y-1]
                     self.tango.setTarget(0, forward)
-                    self.tango.setTarget(1, forward)
+                    rightWheelCurrentSpeed = forward+(2*(5900-forward)) 
+                    self.tango.setTarget(1, rightWheelCurrentSpeed)
+                    
+                    speedReductionValues = [50,100,150,200,250]
+                    if x > 0:
+                        self.tango.setTarget(1, rightWheelCurrentSpeed - speedReductionValues[x-1])
+                    elif x < 0:
+                        self.tango.setTarget(0, forward - speedReductionValues[x-1])
                 elif y < 0:
-                    backwardSpeeds = [6400,6900,7400,7900,8400]
-                    x *= (-1)
-                    backward = backwardSpeeds[x-1]
+                    backwardSpeeds = [6400,6500,6600,6700,6800]
+                    y *= (-1)
+                    backward = backwardSpeeds[y-1]
                     self.tango.setTarget(0, backward)
-                    self.tango.setTarget(1, backward)
+                    leftWheelCurrentSpeed = backward+(2*(5900-backward))
+                    self.tango.setTarget(1, leftWheelCurrentSpeed)
+                    speedReductionValues = [50,100,150,200,250]
+                    if x > 0:
+                        self.tango.setTarget(1, leftWheelCurrentSpeed - speedReductionValues[x-1])
+                    elif x < 0:
+                        self.tango.setTarget(0, forward + speedReductionValues[x-1])
+                elif y == 0:
+                    self.tango.setTarget(0, 5900)
+                    self.tango.setTarget(1, 5900),
                     
                 
 
