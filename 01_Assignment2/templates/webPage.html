@@ -66,7 +66,7 @@
     }
 </style>
 </head>
-<body>
+<body style="height: 100%; overflow: hidden; padding-top: 75px">
 <div class="container">
     <div id="joystick">
         <div id="handle"></div>
@@ -90,10 +90,6 @@
             </div>
         </form>
     </div>
-    <div>
-        <p id="joystickTestX"> </p>
-        <p id="joystickTestY"> </p>
-    </div>
 </div>
 
 <script>
@@ -102,24 +98,26 @@
     const handle = document.getElementById('handle');
     let isDragging = false;
 
-    joystick.addEventListener('mousedown', (event) => {
+    joystick.addEventListener('touchstart', (event) => {
         isDragging = true;
         handle.style.transition = 'none';
         moveHandle(event.pageX, event.pageY);
-    });
+    }, false);
 
-    document.addEventListener('mousemove', (event) => {
+    document.addEventListener('touchmove', (event) => {
         if (isDragging) {
             moveHandle(event.pageX, event.pageY);
+            sendJoystickData(event.pageX, event.pageY, false);
         }
-    });
+    }, false);
 
-    document.addEventListener('mouseup', () => {
+    document.addEventListener('touchend', () => {
         isDragging = false;
         handle.style.transition = 'all 0.3s ease';
         handle.style.left = '50%';
         handle.style.top = '50%';
-    });
+        sendJoystickData(50,50,true);
+    }, false);
 
     function moveHandle(x, y) {
         const rect = joystick.getBoundingClientRect();
@@ -130,13 +128,7 @@
         const distance = Math.sqrt(Math.pow(offsetX - centerX, 2) + Math.pow(offsetY - centerY, 2));
         const angle = Math.atan2(offsetY - centerY, offsetX - centerX);
         const maxDistance = rect.width / 2;
-        
-        // BEGIN TEST
-        testDiv1 = document.getElementById("joystickTestX")
-        testDiv1.innerText = offsetX
-        testDiv2 = document.getElementById("joystickTestY")
-        testDiv2.innerText = offsetY
-        // END TEST
+    
 
         if (distance <= maxDistance) {
             handle.style.left = offsetX + 'px';
@@ -146,6 +138,30 @@
             handle.style.top = centerY + maxDistance * Math.sin(angle) + 'px';
         }
     }
+    
+    // Joystick
+    function sendJoystickData(x, y, isStopSignal) {
+        var offsetX;
+        var offsetY;
+        if (isStopSignal != true) {
+            const rect = joystick.getBoundingClientRect();
+            offsetX = Math.round(x - rect.left);
+            offsetY = Math.round(y - rect.top);
+        } else {
+            offsetX = x;
+            offsetY = y;
+        }
+        function sendData() {
+                var data = offsetX + ";" + offsetY + ";wheels";
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/receive-data',true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.send('data=' + encodeURIComponent(data));
+
+        } // end of sendData()
+        sendData()
+        
+    } 
 
     // Sliders
     const sliders = document.querySelectorAll('input[type="range"]');
