@@ -73,4 +73,6 @@ class Conductor:
                 leftPowerLevel += self.spinPowerAdjustment
                 rightPowerLevel -= self.spinPowerAdjustment
         return [leftPowerLevel, rightPowerLevel, time]
-    
+
+# TODO: Add text file checking so that it remembers turning until the joystick
+#       released.
