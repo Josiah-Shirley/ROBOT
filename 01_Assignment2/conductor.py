@@ -68,7 +68,7 @@ class Conductor:
         else:
             x = self.x
             y = self.y
-            angleMeasureRadians = math.atan(y / x)
+            angleMeasureRadians = math.atan(x / y)
             angleMeasureDegrees = angleMeasureRadians * (180 / math.pi)
             if x < 0 and y < 0:  # Then we are in the third quadrant.
                 angleMeasureDegrees -= 180
