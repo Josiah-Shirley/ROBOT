@@ -144,55 +144,16 @@ def receive_data():
                 x = offsetX - 50
                 y = (offsetY - 50)*(-1)
 
-                if x > 50:
-                    x = 50
-                elif x < -50:
-                    x = -50
-                if y > 50:
-                    y = 50
-                elif y < -50:
-                    y = -50
-
-                # This will turn x and y into single digit integers
-                # e.g. 48 would become 5, 12 would become 1, etc.
-                x = round(x,-1)
-                x /= 10
-                x = int(x)
-                y = round(y,-1)
-                y /= 10
-                y = int(y)
-
-
-                if y > 0:
-                    forwardSpeeds = [5400,5300,5200,5100,5000]
-                    forward = forwardSpeeds[y-1]
-                    self.tango.setTarget(0, forward)
-                    rightWheelCurrentSpeed = forward+(2*(5900-forward)) 
-                    self.tango.setTarget(1, rightWheelCurrentSpeed)
-                    
-                    speedReductionValues = [50,100,150,200,250]
-                    if x > 0:
-                        self.tango.setTarget(1, rightWheelCurrentSpeed - speedReductionValues[x-1])
-                    elif x < 0:
-                        self.tango.setTarget(0, forward - speedReductionValues[x-1])
-                elif y < 0:
-                    backwardSpeeds = [6400,6500,6600,6700,6800]
-                    y *= (-1)
-                    backward = backwardSpeeds[y-1]
-                    self.tango.setTarget(0, backward)
-                    leftWheelCurrentSpeed = backward+(2*(5900-backward))
-                    self.tango.setTarget(1, leftWheelCurrentSpeed)
-                    speedReductionValues = [50,100,150,200,250]
-                    if x > 0:
-                        self.tango.setTarget(1, leftWheelCurrentSpeed - speedReductionValues[x-1])
-                    elif x < 0:
-                        self.tango.setTarget(0, forward + speedReductionValues[x-1])
-                elif y == 0:
-                    self.tango.setTarget(0, 5900)
-                    self.tango.setTarget(1, 5900),
-                    
-                
-
+                if y == 0:
+                    stop()
+                else:
+                    c = Conductor(x, y)
+                    motorInputList = c.handleMovement()
+                    self.tango.setTarget(0, int(motorInputList[0]))
+                    # print(motorInputList[0])
+                    self.tango.setTarget(1, int(motorInputList[1]))
+                    # print(motorInputList[1])
+            
 
                 
             # MOTOR INPUT PARSER _________________________________________________________
