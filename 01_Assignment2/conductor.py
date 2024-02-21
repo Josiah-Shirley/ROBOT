@@ -1,3 +1,6 @@
+# This is a helper object that allows easier debugging and testing
+# of the driving component of backend.py
+
 import math
 
 
