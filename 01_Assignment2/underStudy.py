@@ -1,5 +1,6 @@
 # This is an understudy for the part of the maestro driven controller (Currently played
-# by the part of 'backend.py'.
+# by the part of 'backend.py'.) The point of this program is to provide an
+# easy interface for debugging and testing conductor.py
 
 from conductor import Conductor
 import time
