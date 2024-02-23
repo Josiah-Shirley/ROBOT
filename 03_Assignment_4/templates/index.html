@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Receiver Page</title>
+</head>
+<body>
+<h1>Receiver Page</h1>
+<div id="receivedData"></div>
+
+<script>
+setInterval(getData, 1000); // Poll for new data every second
+
+function getData() {
+    fetch('/get_data')
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("receivedData").innerText = "Received Data: " + data.data;
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+    });
+}
+</script>
+</body>
+</html>
