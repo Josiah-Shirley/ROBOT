@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Receiver Page</title>
+</head>
+<body>
+<h1>Receiver Page</h1>
+<div id="receivedData"></div>
+
+<script>
+setInterval(getData, 1000); // Poll for new data every second
+
+function getData() {
+    fetch('/get_data')
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("receivedData").innerText = data.data;
+    })
+    .then(data => {
+        const { exec } = arguments;
+
+        const pythonScriptPath = '../receiver.py';
+        const dataForPyScript = data;
+
+        const spawn = require("child_process").spawn;
+        const pythonProcess = spawn('python',[pythonScriptPath, data]);
+
+        console.log(`Python script output: ${stdout}`);
+        if (stderr) {
+            console.error(`Python script errors: ${stderr}`);
+        }
+        });
+
+    
+}
+</script>
+</body>
+</html>

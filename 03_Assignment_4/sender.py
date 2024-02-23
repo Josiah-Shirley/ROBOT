@@ -1,14 +1,16 @@
-# sender.py
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify, render_template
 
 app = Flask(__name__)
 
-@app.route('/send_data', methods=['POST'])
-def send_data():
-    data = request.json.get('data')
-    print("Received data:", data)
-    # Process data here if needed
-    return jsonify({"message": "Data received successfully"})
+@app.route('/')
+def index():
+    return render_template('receiver.html')
+
+@app.route('/get_data', methods=['GET'])
+def get_data():
+    conversation = ["Goodbye", "Yes, it is indeed nice to meet you."]
+    data = ["token",conversation[0]]
+    return jsonify({"data": data})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='192.0.0.2', port=80)

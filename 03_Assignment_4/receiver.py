@@ -1,17 +1,10 @@
-# receiver.py
-from flask import Flask, jsonify, render_template
+import sys
+import tkinter as tk
 
-app = Flask(__name__)
+data = sys.argv[1:]
 
-@app.route('/')
-def index():
-    return render_template('receiver.html')
+# Open/create the file in write mode
+with open("test.txt", "w") as file:
+# Write some content to the file
+    file.write(data)
 
-@app.route('/get_data', methods=['GET'])
-def get_data():
-    # Replace this with the data you want to send
-    data = "Hello from sender!"
-    return jsonify({"data": data})
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001)
