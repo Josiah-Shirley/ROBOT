@@ -2,11 +2,12 @@ import socket
 import pickle
 
 # Define host and port
-HOST = '192.168.43.166'
+# HOST = '192.168.43.166' # <-- This is the IP address when connected to the Tango phone's hot spot
+HOST = '192.168.1.5' # <-- MacBook IP address
 PORT = 5002
 
 # Sample data to send
-data_to_send = {'message': 'Hello, server!'}
+data_to_send = {'message': 'Hello, this is the desktop!'}
 
 # Create a socket object
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
