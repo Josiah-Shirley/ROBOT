@@ -12,7 +12,7 @@ while listening:
             print("listening...")
             audio = r.listen(source)
             print("{processing audio...}")
-            word = r.recognize_google_cloud(audio)
+            word = r.recognize_google(audio)
             print(word)
         except sr.UnknownValueError:
             print("..Unknown Word..")
