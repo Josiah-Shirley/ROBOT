@@ -1,0 +1,25 @@
+# Comments are made using hashtags and should be ignored just as they are in python.
+# This is a test document. The point of this document is to test each rule the robot 
+# is meant to follow while speaking. The testing is progressive, meaning that each
+# test adds/tests one new rule. This way, a user would be able to quickly identify
+# if/where the robot has gone wrong.
+
+# RULE 1: Simple User Input and Robot Output
+
+u:(hello):hi, how are you
+u2:(good afternoon):good afternoon to you too
+u1:(good morning):good morning. what does your day look like today?
+
+# RULE 2: Robot Proposal and User Input Followed by Robot Output
+
+
+# RULE 3: Levels of User Input and Robot Output
+
+
+# RULE 4: Variable User Input
+
+
+# RULE 5: Variable Robot Output for single User Input
+
+
+# RULE 6: User Given Values Saved by Robot Using "_" In The Input Section
