@@ -7,8 +7,9 @@
 # RULE 1: Simple User Input and Robot Output
 
 u:(hello):hi, how are you
-u2:(good afternoon):good afternoon to you too
-u1:(good morning):good morning. what does your day look like today?
+u1:(good, and you):good, thank you
+u1:(what time is it):it is twelve in the afternoon
+u:(goodbye):goodbye. see you later
 
 # RULE 2: Robot Proposal and User Input Followed by Robot Output
 
