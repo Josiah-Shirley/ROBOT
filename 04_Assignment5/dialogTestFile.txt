@@ -7,8 +7,6 @@
 # RULE 1: Simple User Input and Robot Output
 
 u:(hello):hi, how are you
-u1:(good, and you):good, thank you
-u1:(what time is it):it is twelve in the afternoon
 u:(goodbye):goodbye. see you later
 
 # RULE 2: Robot Proposal and User Input Followed by Robot Output
@@ -16,6 +14,11 @@ u:(goodbye):goodbye. see you later
 
 # RULE 3: Levels of User Input and Robot Output
 
+u:(what did you do today):this morning or this afternoon
+u1:(this morning):this morning I watered my garden
+u1:(this afternoon):this afternoon I played pool at the sub
+u2:(how did you do at playing pool):I was not very good, to be honest
+u1:(this evening):I would rather not talk about this evening
 
 # RULE 4: Variable User Input
 
