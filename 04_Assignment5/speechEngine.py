@@ -74,7 +74,8 @@ class DialogueTemplate():
                 firstChar = list(line)[0]
                 # "If that first charater is a tilda..."
                 if firstChar == "~":
-                    pass        # <-- handle variable inputs here
+                    variableObject = Variable(line)
+                    self.variablesList.append(variableObject)
                 # "If that first character is a 'u' (Dont worry if it has a number or not just yet)..."
                 elif firstChar == "u":
                     # "Make an input response pair object with that line..."
@@ -136,7 +137,8 @@ class DialogueTemplate():
                     #print("Current subpair being added to active IRP list:", subPair)
                     self.activeUserInputPairs.append(subPair)
         if not foundResponse:
-            response = "That does not appear to be an input I am prepared to handle..."
+            response = "This does not appear to be an input I am prepared to handle..."
+            response += "\n" + "'" + userInput + "'"
         return response
 
 
@@ -167,7 +169,7 @@ class InputResponsePair():
         
     def getPossibleInputs(self) -> list:
         unprocessedPossibleInputs = self.userInput.strip(")(")
-        if list(unprocessedPossibleInputs)[0] == "~":
+        if unprocessedPossibleInputs[0] == "~":
             variableObject = self.getVariableByName(unprocessedPossibleInputs.strip("~"))
             possibleInputs = variableObject.getValues()
         else:
@@ -175,7 +177,29 @@ class InputResponsePair():
         return possibleInputs
     
     def getResponses(self) -> str:
-        return self.responses
+        toReturn = ""
+        if self.responses[0] == "[":
+            values = []
+            tempList = self.responses.replace("[","").replace("]","").split(",")
+            for value in tempList:
+                toAppend = ""
+                valueList = list(value)
+                if '"' in valueList:
+                    toAppend = value[1:len(value)-1]
+                    if toAppend[0] == '"':
+                        toAppend = toAppend[1:]
+                else:
+                    toAppend = value[1:len(value)]
+                tempString = toAppend.split("\n")
+                toAppend = "".join(tempString)
+                values.append(toAppend)
+            toReturn = random.choice(values)
+        elif self.responses[0] == "~":
+            variableObject = self.getVariableByName(self.responses[1:])
+            toReturn = variableObject.getRandomValue()
+        else:
+            toReturn = self.responses
+        return toReturn
     
     def getSubpairs(self):
         return self.subPairs
@@ -198,15 +222,27 @@ class InputResponsePair():
 
 class Variable():
     def __init__(self, line):
-        self.componentList = self.line.split(":")
+        self.componentList = line.split(":")
+        self.values = []
         tempString = self.componentList[1]
-        self.values = tempString.strip("][").split(" ")
-        for item in self.values:
-            item = item.strip('"')
-        self.name = self.componentList[1:len(self.componentList[0])]
+        tempList = tempString.replace("[","").replace("]","").split(",")
+        for value in tempList:
+            toAppend = ""
+            valueList = list(value)
+            if '"' in valueList:
+                tempString = value.strip('"')
+                toAppend = tempString[1:len(value)-1]
+                if toAppend[0] == '"':
+                    toAppend = toAppend[1:]
+            else:
+                toAppend = value[1:len(value)]
+            tempString = toAppend.split("\n")
+            toAppend = "".join(tempString)
+            self.values.append(toAppend)
+        self.name = self.componentList[0].strip("~")
     
     def __str__(self) -> str:
-        return self.name + ": " + self.values
+        return self.name + ": " + str(self.values)
     
     def getValues(self):
         return self.values
