@@ -9,21 +9,22 @@
 u:(hello):hi, how are you
 u:(goodbye):goodbye. see you later
 
-# RULE 2: Robot Proposal and User Input Followed by Robot Output
-
-
-# RULE 3: Levels of User Input and Robot Output
+# RULE 2: Levels of User Input and Robot Output
 
 u:(what did you do today):this morning or this afternoon
 u1:(this morning):this morning I watered my garden
+u2:(how did you do at playing pool):I never said I've played pool.
 u1:(this afternoon):this afternoon I played pool at the sub
 u2:(how did you do at playing pool):I was not very good, to be honest
 u1:(this evening):I would rather not talk about this evening
 
-# RULE 4: Variable User Input
+# RULE 3: Variable User Input
 
+~greetings: [howdy, "hi-diddly-ho neighborino", morning]
+u:(~greetings):shut up, Flanders
 
-# RULE 5: Variable Robot Output for single User Input
+# RULE 4: Variable Robot Output for single User Input
 
+u:(what is the weather like today):["wouldn't you like to know weather boy", good, "very sunny", cloudy]
 
-# RULE 6: User Given Values Saved by Robot Using "_" In The Input Section
+# RULE 5: User Given Values Saved by Robot Using "_" In The Input Section
