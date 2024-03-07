@@ -28,3 +28,5 @@ u:(~greetings):shut up, Flanders
 u:(what is the weather like today):["wouldn't you like to know weather boy", good, "very sunny", cloudy]
 
 # RULE 5: User Given Values Saved by Robot Using "_" In The Input Section
+
+u:(my name is _):hello $name
