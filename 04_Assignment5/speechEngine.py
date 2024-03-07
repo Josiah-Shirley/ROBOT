@@ -55,6 +55,7 @@ class DialogueTemplate():
         self.activeUserInputPairs = []
         self.allInputPairs = []
         self.variablesList = []
+        self.userInputObjectList = []
 
     def __str__(self):
         toReturn = "{"
@@ -78,8 +79,16 @@ class DialogueTemplate():
                     self.variablesList.append(variableObject)
                 # "If that first character is a 'u' (Dont worry if it has a number or not just yet)..."
                 elif firstChar == "u":
+                    irp = ""
+                    hasUserInput = False
+                    for word in line:
+                        if word == "_":
+                            irp = InputResponsePairWithUserInfo(line)
+                            self.userInputObjectList.append(irp.getUserInfoObject())
+                            hasUserInput = True
+                    if not hasUserInput:    
+                        irp = InputResponsePair(line)
                     # "Make an input response pair object with that line..."
-                    irp = InputResponsePair(line)
                     self.allInputPairs.append(irp)
                     # "Get the second character in the line..."
                     nextChar = list(line)[1]
@@ -119,6 +128,35 @@ class DialogueTemplate():
         foundResponse = False
         # Check all active pairs for a valid user input
         for pair in self.activeUserInputPairs:
+            for input in pair.getPossibleInputs():
+                indexOfUnderscore = 0
+                if "_" in input:
+                    currentIndex = 0
+                    inputList = input.split(" ")
+                    for word in inputList:
+                        if word != "_":
+                            currentIndex += 1
+                        else:
+                            indexOfUnderscore = currentIndex
+                inputToTest = input.split(" ")
+                inputToTest.pop(indexOfUnderscore)
+                inputWithoutSpaces = "".join(inputToTest)
+                userInputToTest = userInput.split(" ")
+                possibleUserInputObjectValue = userInputToTest.pop(indexOfUnderscore)
+                userInputWithoutSpaces = "".join(userInputToTest)
+                if userInputWithoutSpaces == inputWithoutSpaces:
+                    userInputObjectName = ""
+                    possibleResponse = pair.getResponses()
+                    responseList = possibleResponse.split(" ")
+                    for word in responseList:
+                        if len(word) > 0:     
+                            if word[0] == "$":
+                                userInputObjectName = word[1:]
+                    self.setUserInfoObjectValue(userInputObjectName, possibleUserInputObjectValue)
+                    for pair in self.allInputPairs:
+                        pair.addUserInfoObjectValue(userInputObjectName, possibleUserInputObjectValue)
+                    response = pair.getResponses()
+                    foundResponse = True
             #print("Current pair being checked:", pair)
             #print("Here are all the subpairs for the current IRP:", pair.getSubpairs())
             subpairs = pair.getSubpairs()
@@ -140,7 +178,18 @@ class DialogueTemplate():
             response = "This does not appear to be an input I am prepared to handle..."
             response += "\n" + "'" + userInput + "'"
         return response
+    
+    def setUserInfoObjectValue(self, name, value) -> bool:
+        for userInfoObject in self.userInputObjectList:
+            if userInfoObject.getName()[1:] == name:
+                userInfoObject.setCurrentValue(value)
+                return True
+        return False
 
+    def getUserInfoObject(self, name):
+        for userInfoObject in self.userInputObjectList:
+            if userInfoObject.getName() == name:
+                return userInfoObject
 
 class InputResponsePair():
     def __init__(self, line) -> None:
@@ -156,6 +205,7 @@ class InputResponsePair():
         self.responses = self.lineComponents[2]
         self.subPairs = []      # <-- This will be a list of InputResponsePair objects
         self.variablesList = []
+        self.userInfoDict = {}
 
     def __str__(self):
         return self.line
@@ -198,7 +248,14 @@ class InputResponsePair():
             variableObject = self.getVariableByName(self.responses[1:])
             toReturn = variableObject.getRandomValue()
         else:
-            toReturn = self.responses
+            responseList = self.responses.split(" ")
+            for word in responseList:
+                if word[0] == "$":
+                    key = word[1:]
+                    toReturn += self.userInfoDict[key]
+                else:
+                    toReturn += word
+                toReturn += " "
         return toReturn
     
     def getSubpairs(self):
@@ -218,6 +275,57 @@ class InputResponsePair():
         for var in self.variablesList:
             if var.getName() == n:
                 return var
+
+    def addUserInfoObjectValue(self, name, value):
+        self.userInfoDict[name] = value
+
+
+class InputResponsePairWithUserInfo(InputResponsePair):
+    def __init__(self, line) -> None:
+        super().__init__(line)
+        userInfoName = ""
+        append = False
+        for char in self.responses:
+            if char == "$":
+                append = True
+            if char == " ":
+                append = False
+            if append:
+                userInfoName += char
+        ui = UserInfo(userInfoName)
+        self.userInfoObject = ui
+
+    def getUserInfoObject(self):
+        return self.userInfoObject
+    
+    def getResponses(self) -> str:
+        toReturn = ""
+        if self.userInfoObject.getCurrentValue() == "":
+            toReturn = "\n" + "()()()This response contains a variable whose value has not been set yet()()()" + "\n"
+        else:
+            line = self.responses
+            lineList = line.split(" ")
+            for word in lineList:
+                if word[0] == "$":
+                    toReturn += self.userInfoObject.getCurrentValue()
+                else:
+                    toReturn += word
+                toReturn += " "
+        return toReturn
+
+class UserInfo():
+    def __init__(self, name) -> None:
+        self.name = name
+        self.value = ""
+    
+    def setCurrentValue(self, v) -> None:
+        self.value = v
+
+    def getCurrentValue(self) -> str:
+        return self.value
+    
+    def getName(self) -> str:
+        return self.name
 
 
 class Variable():
