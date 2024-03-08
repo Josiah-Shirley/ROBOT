@@ -12,7 +12,7 @@ def haveConversation():
     # dt.printPrimaryInputPairs()
 
     # Uncomment the following for final product...
-    """
+    
     listening = True
     r = sr.Recognizer()
 
@@ -35,7 +35,6 @@ def haveConversation():
             except sr.UnknownValueError:
                 print("..Unknown Word..")
     """
-
     # The following block of code is for testing without a micriphone
     listening = True
     while listening:
@@ -46,7 +45,7 @@ def haveConversation():
         response = dt.findResponse(word)
         print(response)
     # End microphoneless testing block
-
+    """
 
 class DialogueTemplate():
     def __init__(self, textFile):
