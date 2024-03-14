@@ -30,3 +30,17 @@ u:(what is the weather like today):["wouldn't you like to know weather boy", goo
 # RULE 5: User Given Values Saved by Robot Using "_" In The Input Section
 
 u:(my name is _):hello $name
+u1:(what is your name):I am a computer, you can name me whatever you want
+u:(what is my name):your name is $name
+
+# Error handling?
+
+jdkhgkjhsdfgkj
+j:(what is your name):I am a computer, you can name me whatever you want
+u:what is your name:I am a computer, you can name me whatever you want
+u(what is your name)I am a computer, you can name me whatever you want
+u19:(what is your name):I am a computer, you can name me whatever you want
+u1:(what is your name):"I am a computer, you can name me whatever you want"
+
+
+
