@@ -1,6 +1,5 @@
 import speech_recognition as sr
 import random
-import TTS
 import pyttsx3
 
 
@@ -10,7 +9,7 @@ import pyttsx3
 
 
 def haveConversation():
-    dt = DialogueTemplate("huntersTestFile.txt")
+    dt = DialogueTemplate("dialogTestFile.txt")
     dt.interpretLines()
     engine = pyttsx3.init()
     # dt.printPrimaryInputPairs()
@@ -42,7 +41,7 @@ def haveConversation():
     # The following block of code is for testing without a micriphone
     listening = True
     while listening:
-        print("Ready To Test...")
+        print("Ready To Test...     *say 'stop' to end the loop*")
         word = input(">>> ")
         if word == "stop":
             break
@@ -76,7 +75,7 @@ class DialogueTemplate():
                 line = self.removeLeadingSpaces(unProcessedline)
                 # tokens = ['#', '~', 'u']
                 # "If it isn't a blank line..."
-                if line != "\n":
+                if self.checkForSpaces(line):
                     # "Take the first character in the line..."
                     firstChar = list(line)[0]
                     # "If that first charater is a tilda..."
@@ -129,6 +128,9 @@ class DialogueTemplate():
         dialogueFile.close()
         for pair in self.allInputPairs:
             pair.setVariablesList(self.variablesList)
+
+    def checkForSpaces(self, given):
+        return any(char.isalpha() for char in given)
 
     def removeLeadingSpaces(self, text):
         return text.lstrip()
@@ -297,6 +299,18 @@ class InputResponsePair():
             possibleInputs = [unprocessedPossibleInputs] 
         return possibleInputs
     
+    def removeCharacterGroup(self, word, group):
+        result = ''
+        i = 0
+        while i < len(word):
+            if word[i:i+2] == group:
+                i += 2
+            else:
+                result += word[i]
+                i += 1
+        return result
+
+    
     def getResponses(self) -> str:
         toReturn = ""
         if self.responses[0] == "[":
@@ -316,7 +330,7 @@ class InputResponsePair():
                 values.append(toAppend)
             toReturn = random.choice(values)
         elif self.responses[0] == "~":
-            variableObject = self.getVariableByName(self.responses[1:])
+            variableObject = self.getVariableByName(self.removeCharacterGroup(self.responses[1:], "\n"))
             toReturn = variableObject.getRandomValue()
         else:
             try:
@@ -324,12 +338,14 @@ class InputResponsePair():
                 for word in responseList:
                     if word[0] == "$":
                         key = word[1:]
+                        key = self.removeCharacterGroup(key, "\n")
                         toReturn += self.userInfoDict[key]
                     else:
                         toReturn += word
                     toReturn += " "
-            except:
+            except Exception as e:
                 toReturn = "You have asked for user information that has not yet been defined..."
+                print("ERROR:", e)
         return toReturn
     
     def getSubpairs(self):

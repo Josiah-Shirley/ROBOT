@@ -26,6 +26,8 @@ u:(~greetings):shut up, Flanders
 # RULE 4: Variable Robot Output for single User Input
 
 u:(what is the weather like today):["wouldn't you like to know weather boy", good, "very sunny", cloudy]
+~insults: ["your mom", "boom roasted", "I hope you step on a lego"]
+u:(whats up):~insults
 
 # RULE 5: User Given Values Saved by Robot Using "_" In The Input Section
 
