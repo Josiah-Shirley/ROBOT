@@ -1,4 +1,4 @@
-import speech_recognition as sr
+from pocketsphinx import LiveSpeech
 import random
 import pyttsx3
 
@@ -13,31 +13,16 @@ def haveConversation():
     dt.interpretLines()
     engine = pyttsx3.init()
     # dt.printPrimaryInputPairs()
-
-    # Uncomment the following for final product...
-    """
     listening = True
-    r = sr.Recognizer()
-
     while listening:
-        with sr.Microphone() as source:
-            r.adjust_for_ambient_noise(source)
-            r.dynamic_energy_threshold = 500
-            try:
-            # Listen for user input
-                print("listening...")
-                audio = r.listen(source)
-                print("{processing audio...}")
-            # Process user input
-                word = r.recognize_google(audio)
-            # Figure out which reply to give
-                response = dt.findResponse(word)
-            # Give a reply
-                print(response)    # <-- Replace print with TTS
-            except sr.UnknownValueError:
-                print("..Unknown Word..")
+        for phrase in LiveSpeech():
+            if phrase == "stop":
+                break
+            response = dt.findResponse(phrase)
+            engine.say(response)
+            engine.runAndWait()
+
     """
-    
     # The following block of code is for testing without a micriphone
     listening = True
     while listening:
@@ -49,7 +34,7 @@ def haveConversation():
         engine.say(response)
         engine.runAndWait()
     # End microphoneless testing block
-    
+    """
 
 class DialogueTemplate():
     def __init__(self, textFile):
