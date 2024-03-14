@@ -13,11 +13,10 @@ def haveConversation():
     dt.interpretLines()
     engine = pyttsx3.init()
     # dt.printPrimaryInputPairs()
+    
     listening = True
     while listening:
         for phrase in LiveSpeech():
-            if phrase == "stop":
-                break
             response = dt.findResponse(phrase)
             engine.say(response)
             engine.runAndWait()
@@ -35,7 +34,7 @@ def haveConversation():
         engine.runAndWait()
     # End microphoneless testing block
     """
-
+    
 class DialogueTemplate():
     def __init__(self, textFile):
         self.textFile = textFile
