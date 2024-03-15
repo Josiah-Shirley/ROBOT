@@ -1,6 +1,6 @@
 from openai import OpenAI
 client = OpenAI(
-    api_key='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'
+    api_key='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'
 )
 
 response = client.chat.completions.create(
