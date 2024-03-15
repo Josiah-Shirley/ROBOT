@@ -1,16 +1,25 @@
+
 from openai import OpenAI
 client = OpenAI(
-    api_key='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'
+    api_key=''
 )
 
+baseString = "For the following prompt: "
+tokenLimitingString = "please respond in a maximum of ten words; "
+personalityString = "please respond how Joe Rogan would respond; "
+
+# Change the value of this variable for the prompt given
+prompt = "tell me a joke"
+
+toDeliver = baseString + tokenLimitingString + personalityString + prompt
+
 response = client.chat.completions.create(
-  model="babbage-002",
+  model="gpt-3.5-turbo",
   messages=[
-    {"role": "user", "content": "What is a good book to read?"},
+    {"role": "user", "content": toDeliver},
   ]
 )
 
 print(response.choices[0].message.content)
 
-# api_key = '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'
 
